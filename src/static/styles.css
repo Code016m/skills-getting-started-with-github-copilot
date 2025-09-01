@@ -7,6 +7,64 @@
 
 body {
   font-family: Arial, sans-serif;
+  background: #f6f8fa;
+  margin: 0;
+  padding: 2rem;
+}
+
+h1 {
+  color: #2c3e50;
+  text-align: center;
+}
+
+ul#lista-atividades {
+  list-style: none;
+  padding: 0;
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+ul#lista-atividades li {
+  background: #fff;
+  border: 1px solid #d1d5da;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(44, 62, 80, 0.04);
+}
+
+form {
+  margin-top: 0.5rem;
+}
+
+input[type="email"] {
+  padding: 0.3rem;
+  border: 1px solid #bfc9d1;
+  border-radius: 3px;
+  margin-right: 0.5rem;
+}
+
+button {
+  background: #2c974b;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #26743a;
+}
+
+.mensagem {
+  margin-top: 0.5rem;
+  font-size: 0.95em;
+}
+
+body {
+  font-family: Arial, sans-serif;
   line-height: 1.6;
   color: #333;
   max-width: 1200px;
@@ -58,11 +116,17 @@ section h3 {
 }
 
 .activity-card {
-  margin-bottom: 15px;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #f9f9f9;
+  background: #fff;
+  border: 1px solid #d1d5da;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  padding: 1.2rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.06);
+  transition: box-shadow 0.2s;
+}
+
+.activity-card:hover {
+  box-shadow: 0 4px 16px rgba(44, 62, 80, 0.12);
 }
 
 .activity-card h4 {
@@ -141,4 +205,32 @@ footer {
   margin-top: 30px;
   padding: 20px;
   color: #666;
+}
+
+.participants-section {
+  margin: 1rem 0 0.5rem 0;
+  padding: 0.7rem 1rem;
+  background: #f4f8fb;
+  border-radius: 6px;
+  border: 1px solid #e1e8ed;
+}
+
+.participants-section strong {
+  color: #2c3e50;
+  font-size: 1em;
+}
+
+.participants-list {
+  margin: 0.5rem 0 0 1.2rem;
+  padding: 0;
+  list-style: disc inside;
+  color: #34495e;
+  font-size: 0.97em;
+}
+
+.no-participants {
+  color: #888;
+  font-style: italic;
+  margin-left: 1.2rem;
+  font-size: 0.97em;
 }

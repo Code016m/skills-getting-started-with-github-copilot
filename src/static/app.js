@@ -4,40 +4,78 @@ document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
 
-  // Function to fetch activities from API
-  async function fetchActivities() {
-    try {
-      const response = await fetch("/activities");
-      const activities = await response.json();
+  // Função para buscar e exibir as atividades
+  async function carregarAtividades() {
+    const resposta = await fetch("/activities");
+    const atividades = await resposta.json();
+    activitiesList.innerHTML = "";
+    activitySelect.innerHTML = ""; // Limpa opções antigas
+    Object.entries(atividades).forEach(([nome, dados]) => {
+      const activityCard = document.createElement("div");
+      activityCard.className = "activity-card";
 
-      // Clear loading message
-      activitiesList.innerHTML = "";
+      const spotsLeft = dados.max_participants - dados.participants.length;
 
-      // Populate activities list
-      Object.entries(activities).forEach(([name, details]) => {
-        const activityCard = document.createElement("div");
-        activityCard.className = "activity-card";
+      // Cria lista de participantes
+      const participantesList = dados.participants.length
+        ? `<ul class="participants-list">
+              ${dados.participants.map(email => `<li>${email}</li>`).join("")}
+           </ul>`
+        : `<div class="no-participants">Nenhum participante ainda.</div>`;
 
-        const spotsLeft = details.max_participants - details.participants.length;
-
-        activityCard.innerHTML = `
-          <h4>${name}</h4>
-          <p>${details.description}</p>
-          <p><strong>Schedule:</strong> ${details.schedule}</p>
+      activityCard.innerHTML = `
+          <h4>${nome}</h4>
+          <p>${dados.description}</p>
+          <p><strong>Schedule:</strong> ${dados.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          <div class="participants-section">
+            <strong>Participantes:</strong>
+            ${participantesList}
+          </div>
+          <form onsubmit="inscrever(event, '${nome}')">
+            <input type="email" name="email" placeholder="Seu e-mail" required>
+            <button type="submit">Inscrever-se</button>
+          </form>
+          <div class="mensagem"></div>
         `;
 
-        activitiesList.appendChild(activityCard);
+      activitiesList.appendChild(activityCard);
 
-        // Add option to select dropdown
-        const option = document.createElement("option");
-        option.value = name;
-        option.textContent = name;
-        activitySelect.appendChild(option);
-      });
-    } catch (error) {
-      activitiesList.innerHTML = "<p>Failed to load activities. Please try again later.</p>";
-      console.error("Error fetching activities:", error);
+      // Add option to select dropdown
+      const option = document.createElement("option");
+      option.value = nome;
+      option.textContent = nome;
+      activitySelect.appendChild(option);
+    });
+  }
+
+  // Função para inscrever o aluno em uma atividade
+  async function inscrever(event, atividade) {
+    event.preventDefault();
+    const form = event.target;
+    const email = form.email.value;
+    const mensagemDiv = form.nextElementSibling;
+    mensagemDiv.textContent = "";
+    try {
+      const resposta = await fetch(
+        `/activities/${encodeURIComponent(atividade)}/signup?email=${encodeURIComponent(email)}`,
+        {
+          method: "POST",
+        }
+      );
+      if (!resposta.ok) {
+        const erro = await resposta.json();
+        mensagemDiv.textContent = erro.detail;
+        mensagemDiv.style.color = "red";
+      } else {
+        const dados = await resposta.json();
+        mensagemDiv.textContent = dados.message;
+        mensagemDiv.style.color = "green";
+        carregarAtividades();
+      }
+    } catch (e) {
+      mensagemDiv.textContent = "Erro ao inscrever.";
+      mensagemDiv.style.color = "red";
     }
   }
 
@@ -82,5 +120,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Initialize app
-  fetchActivities();
+  carregarAtividades();
 });
